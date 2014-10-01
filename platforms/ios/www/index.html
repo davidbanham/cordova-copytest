@@ -26,13 +26,32 @@
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <meta name="msapplication-tap-highlight" content="no" />
         <title>Hello World</title>
+        <script>
+          alert('connect your debugger, if you want')
+        </script>
     </head>
     <body>
         <div class="app">
             <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
+            <div id="deviceready">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
+            </div>
+            <div id="firstfilecreated">
+                <p class="event listening">Waiting for first file to be created</p>
+                <p class="event received">First file created</p>
+            </div>
+            <div id="secondfilecreated">
+                <p class="event listening">Waiting for second file to be created</p>
+                <p class="event received">Second file created</p>
+            </div>
+            <div id="filescopied">
+                <p class="event listening">Waiting for first file to be copied over second file</p>
+                <p class="event received">File copy complete</p>
+            </div>
+            <div id="filecontents">
+                <p class="event listening">Contents of file will appear here. If everything went correctly, it should be second</p>
+                <iframe id=filedisplay></iframe>
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>

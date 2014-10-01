@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+var fs;
 var app = {
     // Application Constructor
     initialize: function() {
@@ -34,6 +35,24 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(ret) {
+          fs = ret;
+          app.createFile('first', function(err) {
+            if (err) throw err;
+            app.receivedEvent('firstfilecreated');
+            app.createFile('second', function(err) {
+              if (err) throw err;
+              app.receivedEvent('secondfilecreated');
+              app.copyFile('second', 'first', function(err) {
+                console.log(err);
+                if (err) document.getElementById('filescopied').appendChild(document.createTextNode("Error! code: "+err.code));
+                if (err) throw err;
+                app.receivedEvent('filescopied');
+                document.getElementById('filedisplay').src = 'cdvfile://localhost/persistent/first';
+              })
+            })
+          })
+        });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -45,5 +64,31 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+    createFile: function(name, callback) {
+      var onGetFileSuccess = function(handle) {
+        handle.createWriter(function(writer) {
+          writer.onwriteend = function() {
+            callback(null);
+          };
+          writer.onerror = function(e) {
+            callback(e);
+          };
+          var blob = new Blob([name], {type: 'text/plain'});
+          writer.write(blob);
+        }, fail);
+      };
+      var fail = function(err) {
+        return callback(err);
+      };
+      fs.root.getFile(name, {create: true, exclusive: false}, onGetFileSuccess, fail);
+    },
+    copyFile: function(from, to, callback) {
+      var fail = function(err) {
+        return callback(err);
+      };
+      fs.root.getFile(from, {}, function(handle) {
+        handle.copyTo(fs.root, to, function(){callback()}, fail);
+      }, fail);
     }
 };
