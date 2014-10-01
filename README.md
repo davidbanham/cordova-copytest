@@ -9,3 +9,7 @@ According to the spec, when copying a file over an existing file, the exiting fi
 [copyTo spec](http://dev.w3.org/2009/dap/file-system/file-dir-sys.html#widl-Entry-copyTo-void-DirectoryEntry-parent-DOMString-newName-EntryCallback-successCallback-ErrorCallback-errorCallback)
 
 Instead, the plugin return an error of code 12, indicating 'PATH_EXISTS_ERR'
+
+It turns out this is not news.
+
+https://issues.apache.org/jira/browse/CB-6938
